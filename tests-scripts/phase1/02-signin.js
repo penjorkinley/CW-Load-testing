@@ -1,6 +1,6 @@
-// test-scripts/02-signin.js
+// test-scripts/phase1/02-signin.js
 import { check, sleep } from "k6";
-import { generateUsername, saveUserData } from "../../utils/data-manager.js";
+import { generateUsername } from "../../utils/data-manager.js";
 import { makePostRequest, parseResponse } from "../../utils/http-helpers.js";
 
 export const options = {
@@ -10,7 +10,7 @@ export const options = {
 
 export default function () {
   const username = generateUsername();
-  let userData = { username: username };
+  let userData = { username };
 
   // Step 1: Signup first
   console.log(`Step 1: Creating user ${username}`);
@@ -31,23 +31,16 @@ export default function () {
     return;
   }
 
-  const signupData = parseResponse(signupResponse);
-  userData.userId = signupData.data.userId;
+  userData.userId = parseResponse(signupResponse).data.userId;
   console.log("✅ Signup successful");
-
   sleep(1);
 
   // Step 2: Test signin
   console.log("Step 2: Testing signin...");
-  const signinPayload = {
+  const signinResponse = makePostRequest("/user/username/signin", {
     username: username,
     password: "U2FsdGVkX1+enAWzb6tUKE5BOlcO+F6rvzKPwV5HYaM=",
-  };
-
-  const signinResponse = makePostRequest(
-    "/user/username/signin",
-    signinPayload
-  );
+  });
 
   const success = check(signinResponse, {
     "signin status is 201": (r) => r.status === 201,
@@ -60,10 +53,6 @@ export default function () {
   if (success) {
     const signinData = parseResponse(signinResponse);
     userData.accessToken = signinData.data.access_token;
-    userData.refreshToken = signinData.data.refresh_token;
-    userData.step = "signin_complete";
-
-    saveUserData(userData);
     console.log("✅ Signin successful!");
   } else {
     console.log("❌ Signin failed!");

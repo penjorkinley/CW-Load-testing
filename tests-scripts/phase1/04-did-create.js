@@ -1,6 +1,6 @@
-// test-scripts/04-did-create.js
+// test-scripts/phase1/04-did-create.js
 import { check, sleep } from "k6";
-import { generateUsername, saveUserData } from "../../utils/data-manager.js";
+import { generateUsername } from "../../utils/data-manager.js";
 import { makePostRequest, parseResponse } from "../../utils/http-helpers.js";
 
 export const options = {
@@ -10,7 +10,7 @@ export const options = {
 
 export default function () {
   const username = generateUsername();
-  let userData = { username: username };
+  let userData = { username };
 
   // Step 1: Complete user setup (signup + signin + wallet)
   console.log(`Setting up user: ${username}`);
@@ -59,7 +59,7 @@ export default function () {
 
   // Step 2: Create DID
   console.log("Creating DID...");
-  const didResponse = makePostRequest("/did", "", userData.accessToken);
+  const didResponse = makePostRequest("/did", {}, userData.accessToken);
 
   const success = check(didResponse, {
     "DID status is 201": (r) => r.status === 201,
@@ -72,9 +72,6 @@ export default function () {
   if (success) {
     const didData = parseResponse(didResponse);
     userData.did = didData.data.did;
-    userData.step = "did_create_complete";
-
-    saveUserData(userData);
     console.log("✅ DID created successfully!");
   } else {
     console.log("❌ DID creation failed!");

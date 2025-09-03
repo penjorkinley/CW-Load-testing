@@ -1,6 +1,6 @@
-// test-scripts/01-signup.js
+// test-scripts/phase1/01-signup.js
 import { check, sleep } from "k6";
-import { generateUsername, saveUserData } from "../../utils/data-manager.js";
+import { generateUsername } from "../../utils/data-manager.js";
 import { makePostRequest, parseResponse } from "../../utils/http-helpers.js";
 
 export const options = {
@@ -32,13 +32,6 @@ export default function () {
 
   if (success) {
     const responseData = parseResponse(response);
-    const userData = {
-      username: username,
-      userId: responseData.data.userId,
-      step: "signup_complete",
-    };
-
-    saveUserData(userData);
     console.log("✅ Signup successful!");
   } else {
     console.log("❌ Signup failed!");

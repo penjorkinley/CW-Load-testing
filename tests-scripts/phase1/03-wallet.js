@@ -1,6 +1,6 @@
-// test-scripts/03-wallet.js
+// test-scripts/phase1/03-wallet.js
 import { check, sleep } from "k6";
-import { generateUsername, saveUserData } from "../../utils/data-manager.js";
+import { generateUsername } from "../../utils/data-manager.js";
 import { makePostRequest, parseResponse } from "../../utils/http-helpers.js";
 
 export const options = {
@@ -10,7 +10,7 @@ export const options = {
 
 export default function () {
   const username = generateUsername();
-  let userData = { username: username };
+  let userData = { username };
 
   // Step 1: Signup
   console.log(`Step 1: Creating user ${username}`);
@@ -47,22 +47,20 @@ export default function () {
 
   // Step 3: Create Wallet
   console.log("Step 3: Creating wallet...");
-  const walletPayload = {
-    label: "Test Credential Wallet",
-    connectionImageUrl: "https://picsum.photos/200",
-  };
-
   const walletResponse = makePostRequest(
     "/create-wallet",
-    walletPayload,
+    {
+      label: "Test Credential Wallet",
+      connectionImageUrl: "https://picsum.photos/200",
+    },
     userData.accessToken
   );
 
   const success = check(walletResponse, {
     "wallet status is 201": (r) => r.status === 201,
-    "has tenantId": (r) => {
+    "has wallet id": (r) => {
       const body = parseResponse(r);
-      return body && body.data && body.data.tenantId;
+      return body && body.data && body.data.id;
     },
   });
 
@@ -70,9 +68,6 @@ export default function () {
     const walletData = parseResponse(walletResponse);
     userData.walletId = walletData.data.id;
     userData.tenantId = walletData.data.tenantId;
-    userData.step = "wallet_complete";
-
-    saveUserData(userData);
     console.log("✅ Wallet created successfully!");
   } else {
     console.log("❌ Wallet creation failed!");
