@@ -1,0 +1,13 @@
+{
+  "name": "k6-load-testing",
+  "version": "1.0.0",
+  "description": "Load testing with persistent data storage",
+  "main": "data-server.js",
+  "scripts": {
+    "server": "node data-server.js",
+    "start": "node data-server.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
