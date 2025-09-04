@@ -1,10 +1,10 @@
 // utils/http-helpers.js
-// HTTP request utilities
+// HTTP request utilities for k6 testing
 
 import http from "k6/http";
 
-const BASE_URL = "https://dev.bhutanndi.com/cloud-wallet/v1";
-const BEARER_TOKEN = "";
+const BASE_URL = __ENV.BASE_URL || "https://dev.bhutanndi.com/cloud-wallet/v1";
+const BEARER_TOKEN = __ENV.BEARER_TOKEN || "";
 
 // Create headers for requests
 function createHeaders(accessToken = null) {
@@ -20,20 +20,10 @@ export function makePostRequest(endpoint, payload, accessToken = null) {
   const url = `${BASE_URL}${endpoint}`;
   const headers = createHeaders(accessToken);
 
-  console.log(`🔄 POST ${endpoint}`);
-
   const response = http.post(url, JSON.stringify(payload), {
     headers,
     timeout: "30s",
   });
-
-  console.log(
-    `   Status: ${response.status} | Duration: ${response.timings.duration}ms`
-  );
-
-  if (response.status >= 400) {
-    console.log(`   Error: ${response.body.substring(0, 100)}...`);
-  }
 
   return response;
 }
@@ -43,20 +33,10 @@ export function makeGetRequest(endpoint, accessToken = null) {
   const url = `${BASE_URL}${endpoint}`;
   const headers = createHeaders(accessToken);
 
-  console.log(`🔄 GET ${endpoint}`);
-
   const response = http.get(url, {
     headers,
     timeout: "30s",
   });
-
-  console.log(
-    `   Status: ${response.status} | Duration: ${response.timings.duration}ms`
-  );
-
-  if (response.status >= 400) {
-    console.log(`   Error: ${response.body.substring(0, 100)}...`);
-  }
 
   return response;
 }
@@ -67,8 +47,7 @@ export function parseResponse(response) {
     const data = JSON.parse(response.body);
     return data;
   } catch (error) {
-    console.error(`❌ Failed to parse JSON response: ${error}`);
-    console.error(`Response body: ${response.body.substring(0, 200)}...`);
+    console.error(`❌ Failed to parse JSON: ${error}`);
     return null;
   }
 }

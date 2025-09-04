@@ -25,14 +25,11 @@ export function createUserData(username) {
   };
 }
 
-// Save user data (logs to console for now)
+// Save user data (logs for k6 output)
 export function saveUserData(userData) {
   console.log("=== USER DATA FOR PHASE 2 ===");
   console.log(JSON.stringify(userData, null, 2));
   console.log("============================");
-
-  // In real implementation, you could save to file or send to external service
-  // For k6, we just log it so it appears in test results
 }
 
 // Log user progress
