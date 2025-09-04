@@ -139,9 +139,9 @@ export function exportStorageData() {
     summary: stats,
   };
 
-  console.log("=== STORAGE EXPORT ===");
-  console.log(JSON.stringify(exportData, null, 2));
-  console.log("======================");
+  // console.log("=== STORAGE EXPORT ===");
+  // console.log(JSON.stringify(exportData, null, 2));
+  // console.log("======================");
 
   return exportData;
 }
