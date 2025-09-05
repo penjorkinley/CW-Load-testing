@@ -13,10 +13,10 @@ import {
 export const options = {
   stages: [
     { duration: "1m", target: 10 }, // Ramp-up: 0 → 10 users over 2 min
-    { duration: "2m", target: 10 }, // Stay: 10 concurrent users for 5 min
+    { duration: "2m", target: 10 }, // Stay: 10 concurrent users for 2 min
     { duration: "2m", target: 20 }, // Peak: 10 → 20 users over 2 min
-    { duration: "2m", target: 20 }, // Sustain: 20 concurrent users for 5 min
-    { duration: "1m", target: 0 }, // Ramp-down: 20 → 0 over 2 min
+    { duration: "2m", target: 20 }, // Sustain: 20 concurrent users for 2 min
+    { duration: "1m", target: 0 }, // Ramp-down: 20 → 0 over  min
   ],
   // Average load thresholds
   thresholds: {
@@ -41,7 +41,8 @@ export default function () {
   const timestamp = Date.now();
   const random = Math.floor(Math.random() * 100000);
   const vuId = __VU;
-  const username = `load_user_${timestamp}_${vuId}_${random}`;
+  const iteration = __ITER;
+  const username = `load_user_${timestamp}_${vuId}_${iteration}_${random}`;
 
   let userData = createUserData(username);
 

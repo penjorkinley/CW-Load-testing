@@ -30,7 +30,6 @@ let availableUsers = [];
 export function setup() {
   console.log("📊 AVERAGE LOAD TEST: Wallet Creation API");
   console.log("=========================================");
-  console.log("Simulating realistic wallet creation patterns...");
   console.log("Duration: 8 minutes total");
   console.log("Load Pattern: 8 → 15 → 0 concurrent users");
 

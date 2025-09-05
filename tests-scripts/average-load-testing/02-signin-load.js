@@ -30,7 +30,6 @@ let availableUsers = [];
 export function setup() {
   console.log("📊 AVERAGE LOAD TEST: User Signin API");
   console.log("=====================================");
-  console.log("Simulating realistic signin traffic patterns...");
   console.log("Duration: 8 minutes total");
   console.log("Load Pattern: 15 → 30 → 0 concurrent users");
 
@@ -55,9 +54,8 @@ export function setup() {
 }
 
 export default function (data) {
-  // Randomly select a REAL user for signin (simulating real user behavior)
-  const randomIndex = Math.floor(Math.random() * data.users.length);
-  const user = data.users[randomIndex];
+  const userIndex = (__VU - 1) % data.users.length; // VU numbers start at 1
+  const user = data.users[userIndex];
 
   if (!user) {
     console.log("❌ No user available for this iteration");

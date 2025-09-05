@@ -30,10 +30,8 @@ let availableUsers = [];
 export function setup() {
   console.log("📊 AVERAGE LOAD TEST: DID Creation API");
   console.log("======================================");
-  console.log("Simulating DID creation under sustained load...");
   console.log("Duration: 10 minutes total");
   console.log("Load Pattern: 5 → 10 → 0 concurrent users");
-  console.log("⚠️  DID creation is resource-intensive - conservative load");
 
   initializeStorage();
 
